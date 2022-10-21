@@ -1,4 +1,5 @@
 const { register } = require('../services/userServise');
+const { parseError } = require('../util/parser');
 
 const authController = require('express').Router();
 
@@ -9,10 +10,29 @@ authController.get('/register', (req, res) => {
 
 authController.post('/register', async (req, res) => {
     console.log(req.body);
-    const token = await register(req.body.username, req.body.password);
-    res.cookie('token', token);
+    try {
+        if (req.body.username == '' || req.body.password == '') {
+            throw new Error('All fields are required!')
+        }
+        if (req.body.password !== req.body.repass) {
+            throw new Error('Passwords don\'t Match!')
+        }
+        const token = await register(req.body.username, req.body.password);
 
-    res.redirect('/auth/register');
+        res.cookie('token', token);
+        res.redirect('/auth/register');
+
+    } catch (error) {
+        const errors = parseError(error);
+        // TODO: Add error display to actual template from assignment!...
+        res.render('register', {
+            title: 'Register Page',
+            errors,
+            body: {
+                username: req.body.username
+            }
+        })
+    }
 });
 
 
