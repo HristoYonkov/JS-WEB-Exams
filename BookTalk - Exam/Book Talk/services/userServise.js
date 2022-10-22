@@ -33,8 +33,8 @@ async function login(email, password) {
     return createSession(user);
 }
 
-function verifyToken() {
-
+function verifyToken(token) {
+    return jwt.verify(token, JWT_SECRET);
 }
 
 function createSession({ _id, username }) {

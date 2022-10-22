@@ -4,22 +4,26 @@ function getAll() {
     return  Book.find();
 }
 
-function create(book) {
+function getOne(id) {
+    return Book.findById(id);
+}
 
-    return Book.create({
+async function create(book, userId) {
+    
+    return await Book.create({
         title: book.title,
         author: book.author,
         image: book.image,
-        bookReview: book.rivew,
+        bookReview: book.review,
         genre: book.genre,
         stars: book.stars,
-        wishingList: { type: [Types.ObjectId], ref: 'User', default: [] },
-        owner: { type: Types.ObjectId, ref: 'User' }
-
+        owner: userId
     });
 }
 
 
 module.exports = {
     getAll,
+    create,
+    getOne
 }
