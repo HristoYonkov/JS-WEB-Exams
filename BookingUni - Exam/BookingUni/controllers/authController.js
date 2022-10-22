@@ -1,7 +1,6 @@
-const { register } = require('../services/userServise');
-const { parseError } = require('../util/parser');
-
 const authController = require('express').Router();
+const { register, login } = require('../services/userServise');
+const { parseError } = require('../util/parser');
 
 authController.get('/register', (req, res) => {
     // TODO: Replace with actual view by assignment!
@@ -9,7 +8,6 @@ authController.get('/register', (req, res) => {
 });
 
 authController.post('/register', async (req, res) => {
-    console.log(req.body);
     try {
         if (req.body.username == '' || req.body.password == '') {
             throw new Error('All fields are required!')
@@ -19,8 +17,9 @@ authController.post('/register', async (req, res) => {
         }
         const token = await register(req.body.username, req.body.password);
 
+        // TODO: Check assignment to see if register create session?...
         res.cookie('token', token);
-        res.redirect('/auth/register');
+        res.redirect('/');
 
     } catch (error) {
         const errors = parseError(error);
@@ -35,5 +34,26 @@ authController.post('/register', async (req, res) => {
     }
 });
 
+authController.get('/login', (req, res) => {
+    res.render('login', {title: 'LoginP Page'});
+});
+
+authController.post('/login', async (req, res) => {
+    try {
+        const token = await login(req.body.username, req.body.password);
+        
+        res.cookie('token', token);
+        res.redirect('/'); // TODO: replace by assignment!...
+    } catch (error) {
+        const errors = parseError(error);
+        res.render('login', {
+            title: 'LoginP Page',
+            errors,
+            body: {
+                username: req.body.username
+            }
+        });
+    }
+})
 
 module.exports = authController; 
