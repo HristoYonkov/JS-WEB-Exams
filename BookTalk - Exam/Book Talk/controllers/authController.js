@@ -1,4 +1,4 @@
-const { register } = require('../services/userServise');
+const { register, login } = require('../services/userServise');
 const { parseError } = require('../util/parser');
 
 const authController = require('express').Router();
@@ -33,7 +33,7 @@ authController.post('/register', async (req, res) => {
             body: {
                 username: req.body.username
             }
-        })
+        });
     }
 });
 
@@ -42,9 +42,24 @@ authController.get('/login', (req, res) => {
     res.render('login');
 });
 
-authController.post('/login', (req, res) => {
+authController.post('/login', async (req, res) => {
     // TODO: Replace with actual view by assignment!
-    res.render('login');
+    try {
+        const token = await login(req.body.email, req.body.password);
+        res.cookie('token', token);
+        res.redirect('/');
+
+    } catch (error) {
+        const errors = parseError(error);
+        res.render('login', {
+            title: 'Register Page',
+            errors,
+            body: {
+                username: req.body.username
+            }
+        });
+    }
+    
 });
 
 authController.get('/logout', (req, res) => {

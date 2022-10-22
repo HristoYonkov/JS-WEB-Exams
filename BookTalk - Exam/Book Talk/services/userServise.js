@@ -23,8 +23,14 @@ async function register(username, email, password) {
     return token;
 }
 
-async function login() {
-
+async function login(email, password) {
+    const user = await User.findOne({email: email});
+    const isEqual = await bcrypt.compare(password, user.hashedPassword);
+    if (!isEqual) {
+        throw new Error('Wrong password!');
+    }
+    
+    return createSession(user);
 }
 
 function verifyToken() {
