@@ -4,6 +4,10 @@ function getAll() {
     return  Book.find();
 }
 
+function findConnection(userId) {
+    return  Book.find({wishingList: userId});
+}
+
 function getOne(id) {
     return Book.findById(id);
 }
@@ -38,11 +42,17 @@ async function deleteById(id) {
     return await Book.findByIdAndDelete(id);
 }
 
+async function wish(id, userId) {
+    return await Book.findByIdAndUpdate(id,{wishingList: userId});
+}
+
 
 module.exports = {
     getAll,
     create,
     getOne,
     edit,
-    deleteById
+    deleteById,
+    wish,
+    findConnection
 }

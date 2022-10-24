@@ -8,4 +8,7 @@ module.exports = (app) => {
     app.use('/auth', authController);
     app.use('/book', bookController);
     app.use('/profile', profileController);
+    app.get('*', (req, res) => {
+        res.render('404');
+    })
 }

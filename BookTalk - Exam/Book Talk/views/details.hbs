@@ -23,7 +23,7 @@
                     <p class="wish-pub">You already added the book to your wish list</p>
                     {{else}}
                     <!-- logged in user who has not yet wished book-->
-                    <a href="/book/read/{{book._id}}" class="btn-wish">Wish to read</a>
+                    <a href="/book/wish/{{book._id}}" class="btn-wish">Wish to read</a>
                     {{/if}}
                 {{/if}}
             </div>
@@ -31,7 +31,7 @@
         </article>
 
         <article class="details-card-image">
-            <img src="./image/Game-of-thrones.jpg">
+            <img src="{{book.image}}">
         </article>
 
     </article>

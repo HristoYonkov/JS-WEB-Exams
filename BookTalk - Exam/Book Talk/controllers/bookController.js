@@ -36,10 +36,10 @@ bookController.get('/details/:id', async (req, res) => {
     const book = await bookService.getOne(req.params.id).lean();
     book.isOwner = false;
     book.isWished = false;
-
+    
     if(req.user && book.owner == req.user._id) {
         book.isOwner = true;
-    } else if(book.wishingList.map(b => b.toString()).includes(req.user._id.toString())) {
+    } else if (req.user && book.wishingList.map(b => b.toString()).includes(req.user._id.toString())) {
         book.isWished = true;
     }
 
@@ -80,6 +80,11 @@ bookController.get('/delete/:id', async (req, res) => {
     } catch (error) {
         res.redirect(`/book/details/${req.params.id}`, {book, errors: parseError(error)});
     }
+});
+
+bookController.get('/wish/:id', async (req, res) => {
+    const book = await bookService.wish(req.params.id, req.user._id);
+    res.redirect(`/book/details/${req.params.id}`);
 });
 
 

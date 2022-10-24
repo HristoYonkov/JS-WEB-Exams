@@ -37,10 +37,10 @@ function verifyToken(token) {
     return jwt.verify(token, JWT_SECRET);
 }
 
-function createSession({ _id, username }) {
+function createSession({ _id, email }) {
     const payload = {
         _id,
-        username
+        email
     }
     const token = jwt.sign(payload, JWT_SECRET);
     return token;
