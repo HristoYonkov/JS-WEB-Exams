@@ -21,9 +21,28 @@ async function create(book, userId) {
     });
 }
 
+async function edit(id, book) {
+    const editted = {
+        title: book.title,
+        author: book.author,
+        genre: book.genre,
+        stars: book.stars,
+        image: book.image,
+        bookReview: book.review
+    }
+    console.log(editted);
+    return await Book.findByIdAndUpdate(id, editted)
+}
+
+async function deleteById(id) {
+    return await Book.findByIdAndDelete(id);
+}
+
 
 module.exports = {
     getAll,
     create,
-    getOne
+    getOne,
+    edit,
+    deleteById
 }

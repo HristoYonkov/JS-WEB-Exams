@@ -1,9 +1,18 @@
-const homeController = require('express').Router();
+const { getAll } = require('../services/hotelService');
 
-// TODO: Replace with real controller by assignment
+const homeController = require('express').Router()
 
-homeController.get('/', (req, res) => {
-    res.render('home', {title: 'Home Page!', user: req.user});
+//TODO replace with real controller by assignment
+homeController.get('/', async (req, res) => {
+    const hotels = await getAll()
+        res.render('home', {
+            //title is not nessaccery I made the templete with {{title}}
+            title: 'Home Page',
+            hotels
+        })
 });
 
-module.exports = homeController;
+
+
+
+module.exports = homeController
