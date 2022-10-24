@@ -1,6 +1,7 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
 const cookieParser = require('cookie-parser');
+const userSession = require('../middlewares/userSession');
 
 module.exports = (app) => {
     const hbs = handlebars.create({
@@ -13,4 +14,5 @@ module.exports = (app) => {
     app.use('/static', express.static('static'));
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
+    app.use(userSession())
 };
