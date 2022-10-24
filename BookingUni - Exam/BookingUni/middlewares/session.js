@@ -1,4 +1,4 @@
-const { verifyToken } = require("../services/userServise");
+const { verifyToken } = require("../services/userService");
 
 
 module.exports = () => (req, res, next) => {
@@ -6,10 +6,11 @@ module.exports = () => (req, res, next) => {
     if (token) {
         try {
             const userData = verifyToken(token);
-
-            //set user to request
+            //take user from request
             req.user = userData;
-            res.locals.username = userData;
+            //add username property to response- everytime if there is username because
+            //this is middleware
+            res.locals.username = userData.username 
         } catch (error) {
             res.clearCookie('token');
             res.redirect('/auth/login');

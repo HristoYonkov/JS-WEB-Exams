@@ -3,6 +3,7 @@ const handlebars = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 const userSession = require('../middlewares/userSession');
 
+
 module.exports = (app) => {
     const hbs = handlebars.create({
         extname: 'hbs'
@@ -14,5 +15,10 @@ module.exports = (app) => {
     app.use('/static', express.static('static'));
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
-    app.use(userSession())
+
+
+    app.use(userSession());
+    //trimbody - trim username and password
+    app.use(trimBody());
+
 };

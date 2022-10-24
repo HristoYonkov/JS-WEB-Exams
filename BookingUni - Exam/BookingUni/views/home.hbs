@@ -1,4 +1,13 @@
-<h1>Home Page</h1>
-{{#if user}}
-    <p>Logged as: {{user.username}}</p>
-{{/if}}
+<section id="viewCatalog" class="background-img">
+    {{#if hotels}}
+    <div class="added-hotels">
+        {{#each hotels}}
+        {{> hotel}}
+        {{/each}}
+    </div>
+    {{else}}
+    <div class="guest">
+        There are no Hotels found...
+    </div>
+    {{/if}}
+</section>

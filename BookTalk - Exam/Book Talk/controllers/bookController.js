@@ -20,6 +20,7 @@ bookController.post('/create', async (req, res) => {
         
     } catch (error) {
         const errors = parseError(error);
+        console.log(errors);
         // TODO: Add error display to actual template from assignment!...
         res.render('create', {
             title: 'Register Page',
@@ -32,9 +33,54 @@ bookController.post('/create', async (req, res) => {
 });
 
 bookController.get('/details/:id', async (req, res) => {
-    const user = req.user;
     const book = await bookService.getOne(req.params.id).lean();
-    res.render('details', {book, user});
-})
+    book.isOwner = false;
+    book.isWished = false;
+
+    if(req.user && book.owner == req.user._id) {
+        book.isOwner = true;
+    } else if(book.wishingList.map(b => b.toString()).includes(req.user._id.toString())) {
+        book.isWished = true;
+    }
+
+    res.render('details', {book, user: req.user});
+});
+
+bookController.get('/edit/:id', async (req, res) => {
+    const book = await bookService.getOne(req.params.id).lean();
+    if (book.owner != req.user._id) {
+        return res.redirect('/auth/login');
+    }
+
+    res.render('edit', {book});
+});
+
+bookController.post('/edit/:id', async (req, res) => {
+    const book = await bookService.getOne(req.params.id).lean();
+    if (book.owner != req.user._id) {
+        return res.redirect('/auth/login');
+    }
+    
+    try {
+        const editted = await bookService.edit(req.params.id, req.body);
+        res.redirect(`/book/details/${req.params.id}`);
+
+    } catch (error) {
+        res.render('edit', {book, errors: parseError(error)});
+    }
+});
+
+bookController.get('/delete/:id', async (req, res) => {
+    
+    console.log(req.params.id);
+    try {
+        await bookService.deleteById(req.params.id);
+        res.redirect('/book/catalog')
+
+    } catch (error) {
+        res.redirect(`/book/details/${req.params.id}`, {book, errors: parseError(error)});
+    }
+});
+
 
 module.exports = bookController;
