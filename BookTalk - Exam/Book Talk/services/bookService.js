@@ -18,7 +18,7 @@ async function create(book, userId) {
         title: book.title,
         author: book.author,
         image: book.image,
-        bookReview: book.review,
+        review: book.review,
         genre: book.genre,
         stars: book.stars,
         owner: userId
@@ -26,16 +26,14 @@ async function create(book, userId) {
 }
 
 async function edit(id, book) {
-    const editted = {
-        title: book.title,
-        author: book.author,
-        genre: book.genre,
-        stars: book.stars,
-        image: book.image,
-        bookReview: book.review
-    }
-    console.log(editted);
-    return await Book.findByIdAndUpdate(id, editted)
+    const editted = await Book.findById(id)
+    editted.title = book.title
+    editted.author = book.author
+    editted.genre = book.genre
+    editted.stars = book.stars
+    editted.image = book.image
+    editted.review = book.review
+    await editted.save();
 }
 
 async function deleteById(id) {

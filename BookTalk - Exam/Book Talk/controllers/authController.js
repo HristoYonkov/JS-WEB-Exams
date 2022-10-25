@@ -14,7 +14,7 @@ authController.post('/register', async (req, res) => {
             throw new Error('All fields are required!')
         }
         if (req.body.password !== req.body.repass) {
-            throw new Error('Passwords don\'t Match!')
+            throw new Error('Passwords or Email don\'t Match!')
         }
         if (req.body.password.length < 3) {
             throw new Error('Password must be atleast 3 characters long!');
@@ -31,7 +31,8 @@ authController.post('/register', async (req, res) => {
             title: 'Register Page',
             errors,
             body: {
-                username: req.body.username
+                username: req.body.username,
+                email: req.body.email
             }
         });
     }
@@ -55,7 +56,7 @@ authController.post('/login', async (req, res) => {
             title: 'Register Page',
             errors,
             body: {
-                username: req.body.username
+                email: req.body.email
             }
         });
     }

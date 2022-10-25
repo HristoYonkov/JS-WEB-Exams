@@ -6,8 +6,9 @@ const JWT_SECRET = 'asdlujcygnhwdsa';
 
 async function register(username, email, password) {
     const existing = await User.findOne({ username }).collation({ locale: 'en', strength: 2 });
-    if (existing) {
-        throw new Error('Email already exist!');
+    const existingEmail = await User.findOne({ email }).collation({ locale: 'en', strength: 2 });
+    if (existing || existingEmail) {
+        throw new Error('Email or password don\'t match!');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,10 +25,15 @@ async function register(username, email, password) {
 }
 
 async function login(email, password) {
-    const user = await User.findOne({email: email});
+    const user = await User.findOne({email: email}).collation({ locale: 'en', strength: 2 });
+    if (!user) {
+        throw new Error('Invalid email or password!');
+    }
+
     const isEqual = await bcrypt.compare(password, user.hashedPassword);
+
     if (!isEqual) {
-        throw new Error('Wrong password!');
+        throw new Error('Invalid email or password!');
     }
     
     return createSession(user);

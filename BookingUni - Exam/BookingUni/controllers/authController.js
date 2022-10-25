@@ -1,6 +1,6 @@
 const { register, login } = require('../services/userService');
 const { parseError } = require('../util/parser');
-const validator = require('validator')
+const validator = require('validator');
 
 const authController = require('express').Router()
 

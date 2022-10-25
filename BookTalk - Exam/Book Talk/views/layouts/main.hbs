@@ -11,12 +11,15 @@
 </head>
 
 <body>
-    {{!-- <div>
+    {{#if errors}}
+    <div>
         <div class="errorContainer">
-            <p>Error</p>
+            {{#each errors}}
+            <p>{{this}}</p>
+            {{/each}}
         </div>
-    </div> --}}
-
+    </div>
+    {{/if}}
     <header class="header">
         <div class="header">
             <nav class="navbar">
