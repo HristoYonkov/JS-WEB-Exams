@@ -1,10 +1,11 @@
-const authController = require('express').Router();
 const { register, login } = require('../services/userServise');
 const { parseError } = require('../util/parser');
 
+const authController = require('express').Router();
+
 authController.get('/register', (req, res) => {
     // TODO: Replace with actual view by assignment!
-    res.render('register', { title: 'Register Page' });
+    res.render('register');
 });
 
 authController.post('/register', async (req, res) => {
@@ -13,50 +14,53 @@ authController.post('/register', async (req, res) => {
             throw new Error('All fields are required!')
         }
         if (req.body.password !== req.body.repass) {
-            throw new Error('Passwords don\'t Match!')
+            throw new Error('Passwords or Email don\'t Match!')
         }
-        const token = await register(req.body.username, req.body.password);
-
-        // TODO: Check assignment to see if register create session?...
+        if (req.body.password.length < 3) {
+            throw new Error('Password must be atleast 3 characters long!');
+        }
+        const token = await register(req.body.username, req.body.email, req.body.password);
+        
         res.cookie('token', token);
         res.redirect('/');
 
     } catch (error) {
         const errors = parseError(error);
-
         // TODO: Add error display to actual template from assignment!...
         res.render('register', {
             title: 'Register Page',
             errors,
             body: {
-                username: req.body.username
+                username: req.body.username,
+                email: req.body.email
             }
-        })
+        });
     }
 });
 
 authController.get('/login', (req, res) => {
-    res.render('login', {title: 'LoginP Page'});
+    // TODO: Replace with actual view by assignment!
+    res.render('login');
 });
 
 authController.post('/login', async (req, res) => {
+    // TODO: Replace with actual view by assignment!
     try {
-        const token = await login(req.body.username, req.body.password);
-        
+        const token = await login(req.body.email, req.body.password);
         res.cookie('token', token);
-        res.redirect('/'); // TODO: replace by assignment!...
+        res.redirect('/');
+
     } catch (error) {
         const errors = parseError(error);
-        
-        // TODO: Add error display to actual template from assignment!...
         res.render('login', {
-            title: 'LoginP Page',
+            title: 'Register Page',
             errors,
             body: {
-                username: req.body.username
+                email: req.body.email
             }
         });
     }
+    
 });
 
 authController.get('/logout', (req, res) => {

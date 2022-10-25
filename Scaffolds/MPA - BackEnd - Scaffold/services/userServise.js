@@ -4,36 +4,38 @@ const User = require('../models/User');
 
 const JWT_SECRET = 'asdlujcygnhwdsa';
 
-async function register(username, password) {
+async function register(username, email, password) {
     const existing = await User.findOne({ username }).collation({ locale: 'en', strength: 2 });
-    if (existing) {
-        throw new Error('Username already exist!');
+    const existingEmail = await User.findOne({ email }).collation({ locale: 'en', strength: 2 });
+    if (existing || existingEmail) {
+        throw new Error('Email or password don\'t match!');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
         username,
+        email,
         hashedPassword
     });
 
     // TODO: See assignment if registration creates user session?...
-    return createSession(user);
+    const token = createSession(user);
+    return token;
 }
 
-async function login(username, password) {
-    const user = await User.findOne({ username }).collation({ locale: 'en', strength: 2 });
-
+async function login(email, password) {
+    const user = await User.findOne({email: email}).collation({ locale: 'en', strength: 2 });
     if (!user) {
-        throw new Error('Incorect username or password!');
+        throw new Error('Invalid email or password!');
     }
 
-    const ifMatched = await bcrypt.compare(password, user.hashedPassword);
+    const isEqual = await bcrypt.compare(password, user.hashedPassword);
+
+    if (!isEqual) {
+        throw new Error('Invalid email or password!');
+    }
     
-    if (ifMatched == false) {
-        throw new Error('Incorect username or password!');
-    }
-
     return createSession(user);
 }
 
@@ -41,12 +43,13 @@ function verifyToken(token) {
     return jwt.verify(token, JWT_SECRET);
 }
 
-function createSession({ _id, username }) {
+function createSession({ _id, email }) {
     const payload = {
         _id,
-        username
+        email
     }
-    return jwt.sign(payload, JWT_SECRET);
+    const token = jwt.sign(payload, JWT_SECRET);
+    return token;
 }
 
 module.exports = {
