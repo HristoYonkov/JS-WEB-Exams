@@ -16,8 +16,8 @@ authController.post('/register', async (req, res) => {
         if (req.body.password !== req.body.repass) {
             throw new Error('Passwords or Email don\'t Match!')
         }
-        if (req.body.password.length < 3) {
-            throw new Error('Password must be atleast 3 characters long!');
+        if (req.body.password.length < 4) {
+            throw new Error('Password must be atleast 4 characters long!');
         }
         const token = await register(req.body.username, req.body.email, req.body.password);
         

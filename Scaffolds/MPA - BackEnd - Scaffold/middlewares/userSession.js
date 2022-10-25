@@ -6,7 +6,7 @@ module.exports = () => (req, res, next) => {
     if (token) {
         try {
             const userData = verifyToken(token);
-
+            
             //set user to request
             req.user = userData;
             res.locals.username = userData.email;

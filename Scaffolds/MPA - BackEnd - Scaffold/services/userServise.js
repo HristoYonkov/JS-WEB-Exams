@@ -39,18 +39,20 @@ async function login(email, password) {
     return createSession(user);
 }
 
-function verifyToken(token) {
-    return jwt.verify(token, JWT_SECRET);
-}
-
-function createSession({ _id, email }) {
+function createSession({ _id, email, username }) {
     const payload = {
         _id,
-        email
+        email,
+        username
     }
     const token = jwt.sign(payload, JWT_SECRET);
     return token;
 }
+
+function verifyToken(token) {
+    return jwt.verify(token, JWT_SECRET);
+}
+
 
 module.exports = {
     register,

@@ -5,41 +5,43 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Store</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <title>Home Page - Crypto Web</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 
 <body>
     {{#if errors}}
-    <div>
-        <div class="errorContainer">
-            {{#each errors}}
-            <p>{{this}}</p>
-            {{/each}}
+        <<div>
+            <div class="errorContainer">
+                {{#each errors}}
+                    <p>{{this}}</p>
+                {{/each}}
+            </div>
         </div>
-    </div>
     {{/if}}
     <header class="header">
-        <div class="header">
-            <nav class="navbar">
-                <a href="/">Home</a>
-                <a href="/book/catalog">Catalog</a>
+        <nav>
+            <img src="/static/images/logo.png" class="logo">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/crypto/catalog">All Crypto</a></li>
                 {{#if username}}
-                <!--Only for logged user-->
-                <a href="/profile">Profile</a>
-                <a href="/book/create">Create Review</a>
-                <a href="/auth/logout">Logout</a>
+                <li><a href="/crypto/search">Search</a></li>
+                <li><a href="/crypto/create">Create Offer</a></li>
+                <li><a href="/auth/logout">Logout</a></li>
                 {{else}}
-                <!--Only for guest-->
-                <a href="/auth/login">Login</a>
-                <a href="/auth/register">Register</a>
+                <li><a href="/auth/login">Login</a></li>
+                <li><a href="/auth/register">Register</a></li>
                 {{/if}}
-            </nav>
-        </div>
+            </ul>
+        </nav>
     </header>
 
     {{{body}}}
+    <footer>
+        <p>Back-End 2022</p>
+    </footer>
+
 </body>
 
 </html>
