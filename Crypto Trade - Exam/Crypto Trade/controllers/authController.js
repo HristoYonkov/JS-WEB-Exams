@@ -28,7 +28,6 @@ authController.post('/register', async (req, res) => {
         const errors = parseError(error);
         // TODO: Add error display to actual template from assignment!...
         res.render('register', {
-            title: 'Register Page',
             errors,
             body: {
                 username: req.body.username,
@@ -56,7 +55,6 @@ authController.post('/login', async (req, res) => {
     } catch (error) {
         const errors = parseError(error);
         res.render('login', {
-            title: 'Register Page',
             errors,
             body: {
                 email: req.body.email
