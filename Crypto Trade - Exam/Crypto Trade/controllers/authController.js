@@ -10,7 +10,7 @@ authController.get('/register', (req, res) => {
 
 authController.post('/register', async (req, res) => {
     try {
-        if (req.body.username == '' || req.body.password == '') {
+        if (Object.values(req.body).some(x => !x)) {
             throw new Error('All fields are required!')
         }
         if (req.body.password !== req.body.repass) {
@@ -46,6 +46,9 @@ authController.get('/login', (req, res) => {
 authController.post('/login', async (req, res) => {
     // TODO: Replace with actual view by assignment!
     try {
+        if (Object.values(req.body).some(x => !x)) {
+            throw new Error('All fields are required!')
+        }
         const token = await login(req.body.email, req.body.password);
         res.cookie('token', token);
         res.redirect('/');

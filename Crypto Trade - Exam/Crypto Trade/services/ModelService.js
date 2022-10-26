@@ -1,3 +1,4 @@
+// TODO: Take model according to the assignment!
 const Book = require('../models/Book');
 
 function getAll() {
@@ -33,7 +34,6 @@ async function edit(id, book) {
     editted.stars = book.stars
     editted.image = book.image
     editted.review = book.review
-    
     await editted.save();
 }
 
