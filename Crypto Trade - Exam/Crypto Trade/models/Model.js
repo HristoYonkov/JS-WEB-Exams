@@ -2,7 +2,7 @@ const { Schema, model, Types } = require('mongoose');
 
 const URL_PATTEERN = /^https?:\/\/.+$/i;
 
-const bookSchema = new Schema({
+const modelSchema = new Schema({
     title: { type: String, required: true, minlength: [2, 'Title should be at least 2 characters!'] },
     author: { type: String, required: true, minlength: [5, 'Author should be at least 5 characters!'] },
     image: { type: String, required: true, validate: {
@@ -17,6 +17,6 @@ const bookSchema = new Schema({
 
 });
 
-const Book = model('Book', bookSchema);
+const Model = model('Book', bookSchema);
 
 module.exports = Book;
