@@ -9,6 +9,7 @@ function hasUser() {
 };
 
 function isGuest() {
+    // console.log('HERE-----');
     return (req, res, next) => {
         if (req.user) {
             //TODO redirect from assignment for correct redirect

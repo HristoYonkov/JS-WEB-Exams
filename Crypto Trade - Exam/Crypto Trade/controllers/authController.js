@@ -29,10 +29,7 @@ authController.post('/register', async (req, res) => {
         // TODO: Add error display to actual template from assignment!...
         res.render('register', {
             errors,
-            body: {
-                username: req.body.username,
-                email: req.body.email
-            }
+            body: req.body
         });
     }
 });

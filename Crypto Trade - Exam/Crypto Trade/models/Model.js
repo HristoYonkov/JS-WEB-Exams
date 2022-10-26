@@ -9,8 +9,13 @@ const modelSchema = new Schema({
         message: 'Image URL is not valid!'
     }},
     price: { type: Number, required: true, min: [0, 'Price should be a positive number!'] },
-    description: { type: String, required: true, eunm: ['crypto-wallet', 'credit-card', 'debit-card', 'paypal'] },
-    payMethod: { type: String, required: true, minlength: [3, 'Genre should be at least 2 characters!'] },
+    description: { type: String, required: true, minlength: [10, 'Description should be at least 10 characters long!'] },
+
+    payMethod: { type: String, required: true, enum: {
+        values: ['crypto-wallet', 'credit-card', 'debit-card', 'paypal'],
+        message: 'Pay method is not supported!'}
+    },
+
     buyers: { type: [Types.ObjectId], ref: 'User', default: [] },
     owner: { type: Types.ObjectId, ref: 'User' }
 

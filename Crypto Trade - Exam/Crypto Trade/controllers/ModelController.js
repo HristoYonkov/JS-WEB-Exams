@@ -1,29 +1,29 @@
 const ModelController = require('express').Router();
-const ModelService = require('../services/ModelsService');
+const { hasUser, isGuest } = require('../middlewares/guard');
+const ModelService = require('../services/ModelService');
 const { parseError } = require('../util/parser');
 
 
 ModelController.get('/catalog', async (req, res) => {
     const models = await ModelService.getAll().lean();
-    res.render('catalog', {models});
+    res.render('catalog', { models });
 });
 
-ModelController.get('/create', (req, res) => {
+ModelController.get('/create', hasUser(), (req, res) => {
     res.render('create');
 });
 
-ModelController.post('/create', async (req, res) => {
-    
+ModelController.post('/create', hasUser(), async (req, res) => {
+
     try {
         if (Object.values(req.body).some(x => !x)) {
             throw new Error('All fields are required!')
         }
         const model = await ModelService.create(req.body, req.user._id);
-        
+
         res.redirect('/model/catalog');
-        
+
     } catch (error) {
-        console.log(req.body);
         const errors = parseError(error);
         // TODO: Add error display to actual template from assignment!...
         res.render('create', {
@@ -34,64 +34,63 @@ ModelController.post('/create', async (req, res) => {
 });
 
 ModelController.get('/details/:id', async (req, res) => {
-    const book = await bookService.getOne(req.params.id).lean();
+    const model = await ModelService.getOne(req.params.id).lean();
 
-    book.isOwner = false;
-    book.isWished = false;
-    
-    if(req.user && book.owner == req.user._id) {
-        book.isOwner = true;
-    } else if (req.user && book.wishingList.map(b => b.toString()).includes(req.user._id.toString())) {
-        book.isWished = true;
+    model.isOwner = false;
+    model.isBuyed = false;
+    console.log(model);
+    if (req.user && model.owner == req.user._id) {
+        model.isOwner = true;
+    } else if (req.user && model.buyers && model.buyers.map(b => b.toString()).includes(req.user._id.toString())) {
+        model.isBuyed = true;
     }
-    
-    res.render('details', {book, user: req.user});
+
+    res.render('details', { model, user: req.user });
 });
 
-ModelController.get('/edit/:id', async (req, res) => {
-    const book = await bookService.getOne(req.params.id).lean();
-    if (book.owner != req.user._id) {
+ModelController.get('/edit/:id', hasUser(), async (req, res) => {
+    const model = await ModelService.getOne(req.params.id).lean();
+    if (model.owner != req.user._id) {
         return res.redirect('/auth/login');
     }
-    
-    res.render('edit', {book});
+
+    res.render('edit', { model });
 });
 
-ModelController.post('/edit/:id', async (req, res) => {
-    const book = await bookService.getOne(req.params.id).lean();
-    if (book.owner != req.user._id) {
+ModelController.post('/edit/:id', hasUser(), async (req, res) => {
+    const model = await ModelService.getOne(req.params.id).lean();
+    if (model.owner != req.user._id) {
         return res.redirect('/auth/login');
     }
-    
+
     try {
         if (Object.values(req.body).some(x => !x)) {
             throw new Error('All fields are required!')
         }
-        
-        const editted = await bookService.edit(req.params.id, req.body);
-        res.redirect(`/book/details/${req.params.id}`);
-        
+
+        const editted = await ModelService.edit(req.params.id, req.body);
+        res.redirect(`/model/details/${req.params.id}`);
+
     } catch (error) {
         res.render('edit', {
-            book: req.body,
+            model: req.body,
             errors: parseError(error),
         });
     }
 });
 
-ModelController.get('/delete/:id', async (req, res) => {
-    try {
-        await bookService.deleteById(req.params.id);
-        res.redirect('/book/catalog')
-
-    } catch (error) {
-        res.redirect(`/book/details/${req.params.id}`, {book, errors: parseError(error)});
+ModelController.get('/delete/:id', hasUser(), async (req, res) => {
+    let model = await ModelService.deleteById(req.params.id);
+    if (model.owner != req.user._id) {
+        return res.redirect('/auth/login');
     }
+    
+    res.redirect('/model/catalog');
 });
 
-ModelController.get('/wish/:id', async (req, res) => {
-    const book = await bookService.wish(req.params.id, req.user._id);
-    res.redirect(`/book/details/${req.params.id}`);
+ModelController.get('/buy/:id', hasUser(), async (req, res) => {
+    const model = await ModelService.buy(req.params.id, req.user._id);
+    res.redirect(`/model/details/${req.params.id}`);
 });
 
 
