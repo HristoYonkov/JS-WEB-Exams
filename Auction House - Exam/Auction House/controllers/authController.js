@@ -19,7 +19,7 @@ authController.post('/register', async (req, res) => {
         if (req.body.password.length < 4) {
             throw new Error('Password must be atleast 4 characters long!');
         }
-        const token = await register(req.body.username, req.body.email, req.body.password);
+        const token = await register(req.body.firstname, req.body.lastname, req.body.email, req.body.password);
         
         res.cookie('token', token);
         res.redirect('/');

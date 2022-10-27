@@ -2,6 +2,7 @@ const ModelController = require('express').Router();
 const { hasUser, isGuest } = require('../middlewares/guard');
 const ModelService = require('../services/ModelService');
 const { parseError } = require('../util/parser');
+const userService = require('../services/userServise');
 
 
 ModelController.get('/catalog', async (req, res) => {
@@ -35,17 +36,27 @@ ModelController.post('/create', hasUser(), async (req, res) => {
 
 ModelController.get('/details/:id', async (req, res) => {
     const model = await ModelService.getOne(req.params.id).lean();
+    const author = await userService.getUser(model.author.toString()).lean();
+    const authorName = `${author.firstname} ${author.lastname}`;
 
-    model.isOwner = false;
-    model.isBuyed = false;
-    console.log(model);
-    if (req.user && model.owner == req.user._id) {
-        model.isOwner = true;
-    } else if (req.user && model.buyers && model.buyers.map(b => b.toString()).includes(req.user._id.toString())) {
-        model.isBuyed = true;
+    let currentUser = userService.getUser(req.user._id);
+
+    console.log(model.bidder);
+    model.canBid = false;
+    if (model.bidder && model.bidder.toString() != req.user._id) {
+        
+    } else {
+        model.canBid = true;
     }
 
-    res.render('details', { model, user: req.user });
+    // model.isOwner = false;
+    // if (req.user && model.owner == req.user._id) {
+    //     model.isOwner = true;
+    // } else if (req.user && model.buyers && model.buyers.map(b => b.toString()).includes(req.user._id.toString())) {
+    //     model.isBuyed = true;
+    // }
+
+    res.render('details', {model, user: req.user, authorName});
 });
 
 ModelController.get('/edit/:id', hasUser(), async (req, res) => {

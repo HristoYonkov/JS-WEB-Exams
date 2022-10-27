@@ -1,16 +1,21 @@
-<main>
-    <section class="crypto-market">
-        <h1><span>Crypto</span> Trade</h1>
-        {{#if models}}
-        <div class="offer-list">
-            {{#each models}}
-                {{> model}}
-            {{/each}}
+<!-- Browse Page -->
+<section id="catalog-section" class="spaced">
+
+    <h1 class="item">Auctions</h1>
+    {{#if models}}
+    <!-- List of available auctions -->
+    <ul class="catalog cards">
+        {{#each models}}
+        {{> model}}
+        {{/each}}
+    </ul>
+    {{else}}
+    <!-- If there are no auctions to display -->
+    <div class="item pad-large align-center">
+        <p>Nothing has been listed yet. Be the first!</p>
+        <div>
+            <a class="action" href="/model/create">Publish Auction</a>
         </div>
-        {{else}}
-        <div class="no-offer">
-            <p>There are no crypto offers found!</p>
-        </div>
-        {{/if}}
-    </section>
-</main>
+    </div>
+    {{/if}}
+</section>

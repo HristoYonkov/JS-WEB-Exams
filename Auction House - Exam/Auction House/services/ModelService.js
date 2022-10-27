@@ -19,13 +19,13 @@ async function buy(id, userId) {
 
 async function create(model, userId) { 
     return await Model.create({
-        name: model.name,
+        title: model.title,
+        description: model.description,
+        category: model.category,
         image: model.image,
         price: model.price,
-        description: model.description,
-        payMethod: model.payMethod,
-        buyers: model.buyers,
-        owner: userId
+        bidder: model.bidder,
+        author: userId
     });
 }
 
@@ -64,5 +64,5 @@ module.exports = {
     deleteById,
     findConnection,
     buy,
-    getBySearch
+    getBySearch,
 }

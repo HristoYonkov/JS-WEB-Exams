@@ -1,12 +1,14 @@
-<div class="coin">
-    <div class="coin-img">
-        <img src="{{image}}">
-    </div>
-    <div class="coin-info">
-        <h1>{{name}}</h1>
-        <p><span>Price: </span>${{price}}</p>
-        <p><span>Payment: </span>{{payMethod}}</p>
+<li class="item">
+    <header class="pad-med">
+        <h2>{{title}}</h2>
+    </header>
+
+    <div class="align-center">
+        <img class="img-thumb" src="{{image}}">
     </div>
 
-    <a href="/model/details/{{_id}}" class="btn-details">Details</a>
-</div>
+    <footer class="align-center pad-med">
+        <p>Current price: <strong>${{price}}</strong></p>
+        <a class="action" href="/model/details/{{_id}}">See details</a>
+    </footer>
+</li>
