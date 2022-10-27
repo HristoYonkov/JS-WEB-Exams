@@ -22,10 +22,10 @@
                         Current price: $<strong>{{model.price}}</strong>
                     </div>
                     {{#if user}}
-                    {{#if canBid}}
+                    {{#if model.canBid}}
                     <!-- If current user can place a bid -->
-                    <form class="vertical" method="post" action="#">
-                        <label><span>Bid amount</span><input type="number" name=""></label>
+                    <form class="vertical" method="post">
+                        <label><span>Bid amount</span><input type="number" name="price"></label>
                         <input class="action" type="submit" value="Place bid">
                     </form>
                     {{else}}
@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <footer>Listed by {{authorName}}</footer>
+        <footer>Listed by <strong>{{authorName}}</strong></footer>
     </div>
 
 </section>

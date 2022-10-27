@@ -31,13 +31,20 @@ async function create(model, userId) {
 
 async function edit(id, model) {
     const editted = await Model.findById(id)
-    editted.name = model.name,
-    editted.image = model.image,
-    editted.price = model.price,
-    editted.description = model.description,
-    editted.payMethod = model.payMethod,
-    editted.buyers = model.buyers,
+    editted.name = model.name;
+    editted.image = model.image;
+    editted.price = model.price;
+    editted.description = model.description;
+    editted.payMethod = model.payMethod;
+    editted.buyers = model.buyers;
         
+    await editted.save();
+}
+
+async function editPrice(price, id, userId) {
+    const editted = await Model.findById(id)
+    editted.price = price;
+    editted.bidder = userId;
     await editted.save();
 }
 
@@ -65,4 +72,5 @@ module.exports = {
     findConnection,
     buy,
     getBySearch,
+    editPrice,
 }

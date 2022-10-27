@@ -1,11 +1,10 @@
-<!-- Details Page - Auction owner -->
 <section id="catalog-section">
 
     <h1 class="item">
-        Fishing Boat
+        {{model.title}}
         <div class="f-right">
-            <a class="action pad-small f-left" href="/model/edit">Edit</a>
-            <a class="action pad-small f-left" href="/model/delete">Delete</a>
+            <a class="action pad-small f-left" href="/model/edit/{{model._id}}">Edit</a>
+            <a class="action pad-small f-left" href="/model/delete/{{model._id}}">Delete</a>
         </div>
     </h1>
     <div class="item padded">

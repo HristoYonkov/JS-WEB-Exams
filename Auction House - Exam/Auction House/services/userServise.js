@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const JWT_SECRET = 'asdlujcygnhwdsa';
+
 function getUser(id) {
     return User.findById(id);
 }
