@@ -44,7 +44,7 @@ ModelController.get('/details/:id', async (req, res) => {
     }
     //let currentUser = userService.getUser(req.user._id).lean();
 
-    if (model.bidder && model.bidder.toString() == req.user._id) {
+    if (model.bidder && model.bidder.toString() == req.user?._id) {
         model.canBid = false;
     } else {
         model.canBid = true;
@@ -143,6 +143,12 @@ ModelController.get('/delete/:id', hasUser(), async (req, res) => {
 ModelController.get('/buy/:id', hasUser(), async (req, res) => {
     const model = await ModelService.buy(req.params.id, req.user._id);
     res.redirect(`/model/details/${req.params.id}`);
+});
+
+ModelController.get('/closeAction/:id', async (req, res) => {
+    const model = await ModelService.getOne(req.params.id).lean();
+
+    res.render('closed-auctions', { model });
 });
 
 
