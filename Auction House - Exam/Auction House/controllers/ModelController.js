@@ -39,12 +39,12 @@ ModelController.get('/details/:id', async (req, res) => {
     const author = await userService.getUser(model.author.toString()).lean();
     const authorName = `${author.firstname} ${author.lastname}`;
 
-    if (req.user._id == model.author.toString()) {
+    if (req.user?._id == model.author.toString()) {
         return res.redirect(`/model/details-owner/${req.params.id}`);
     }
     //let currentUser = userService.getUser(req.user._id).lean();
-    console.log(model.bidder);
-    if (model.bidder && model.bidder.toString() != req.user._id) {
+
+    if (model.bidder && model.bidder.toString() == req.user._id) {
         model.canBid = false;
     } else {
         model.canBid = true;
@@ -72,7 +72,7 @@ ModelController.post('/details/:id', async (req, res) => {
             return res.redirect('/model/catalog')
         }
         throw new Error('Bud must be higher than price!')
-    
+
     } catch (error) {
         res.render(`details`, {
             authorName,
@@ -81,22 +81,28 @@ ModelController.post('/details/:id', async (req, res) => {
             errors: parseError(error)
         });
     }
-    
+
 });
 
 ModelController.get('/details-owner/:id', async (req, res) => {
     const model = await ModelService.getOne(req.params.id).lean();
+    const author = await userService.getUser(model.author.toString()).lean();
+    const authorName = `${author.firstname} ${author.lastname}`;
+
+    let bidder;
+    let bidderName;
+
     if (model.bidder) {
-        const bidder = await userService.getUser(model.bidder.toString()).lean();
-        const bidderName = `${bidder.firstname} ${bidder.lastname}`;
-        res.render(`details-owner`, {bidderName, model});
+        bidder = await userService.getUser(model.bidder.toString()).lean();
+        bidderName = `${bidder.firstname} ${bidder.lastname}`;
+        res.render(`details-owner`, { bidderName, model, authorName });
     }
-    res.render(`details-owner`);
+    res.render(`details-owner`, { model, bidderName, authorName});
 });
 
 ModelController.get('/edit/:id', hasUser(), async (req, res) => {
     const model = await ModelService.getOne(req.params.id).lean();
-    if (model.owner != req.user._id) {
+    if (model.author != req.user._id) {
         return res.redirect('/auth/login');
     }
 
@@ -105,7 +111,7 @@ ModelController.get('/edit/:id', hasUser(), async (req, res) => {
 
 ModelController.post('/edit/:id', hasUser(), async (req, res) => {
     const model = await ModelService.getOne(req.params.id).lean();
-    if (model.owner != req.user._id) {
+    if (model.author != req.user._id) {
         return res.redirect('/auth/login');
     }
 
@@ -127,7 +133,7 @@ ModelController.post('/edit/:id', hasUser(), async (req, res) => {
 
 ModelController.get('/delete/:id', hasUser(), async (req, res) => {
     let model = await ModelService.deleteById(req.params.id);
-    if (model.owner != req.user._id) {
+    if (model.author != req.user._id) {
         return res.redirect('/auth/login');
     }
 

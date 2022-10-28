@@ -30,13 +30,12 @@ async function create(model, userId) {
 }
 
 async function edit(id, model) {
-    const editted = await Model.findById(id)
-    editted.name = model.name;
+    const editted = await Model.findById(id);
+    editted.title = model.title;
+    editted.description = model.description;
+    editted.category = model.category;
     editted.image = model.image;
     editted.price = model.price;
-    editted.description = model.description;
-    editted.payMethod = model.payMethod;
-    editted.buyers = model.buyers;
         
     await editted.save();
 }

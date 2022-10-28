@@ -12,24 +12,24 @@
         <div class="layout right large">
 
             <div class="col">
-                <img src="/static/assets/boat.jpg" class="img-large">
+                <img src="{{model.image}}" class="img-large">
             </div>
 
             <div class="content pad-med">
 
-                <p>In category: <strong>Vehicles</strong></p>
-                <p>Excellent condition. Onboard diesel motor, upholstered cockpit, fishing sonar. Includes
-                    trailer.</p>
+                <p>In category: <strong>{{model.category}}</strong></p>
+                <p>{{model.description}}</p>
 
                 <div class="align-center">
                     <div>
-                        Current price: $<strong>5000</strong>
+                        Current price: $<strong>{{model.price}}</strong>
                     </div>
 
                     <div>
                         <!-- If there is a bidder -->
-                        Bid by <strong>John Maclane</strong>
-
+                        {{#if bidderName}}
+                        Bid by <strong>{{bidderName}}</strong>
+                        {{else}}
                         <!-- # Bonus: If there is a bidder -->
                         <!--
 
@@ -39,13 +39,14 @@
 
                         <!-- If there are no bids -->
                         No bids
+                        {{/if}}
                     </div>
                 </div>
 
             </div>
         </div>
 
-        <footer>Listed by Peter Jackson</footer>
+        <footer>Listed by {{authorName}}</footer>
     </div>
 
 </section>
