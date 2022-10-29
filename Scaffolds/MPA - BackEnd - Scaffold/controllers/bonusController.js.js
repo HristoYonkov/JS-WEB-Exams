@@ -16,7 +16,7 @@ bonusController.post('/search', hasUser(), async (req, res) => {
     res.render('search', { models });
 });
 
-bonusController.get('/', async (req, res) => {
+bonusController.get('/profile', async (req, res) => {
     res.render('profile', { books, email: req.user.email });
 });
 
