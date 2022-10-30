@@ -3,21 +3,34 @@ const { Schema, model, Types } = require('mongoose');
 const URL_PATTEERN = /^https?:\/\/.+$/i;
 
 const modelSchema = new Schema({
-    name: { type: String, required: true, minlength: [2, 'Title should be at least 2 characters!'] },
+    title: { type: String, required: true, 
+        minlength: [6, 'Title should be at least 6 characters!'] 
+    },
+    keyword: { type: String, required: true, 
+        minlength: [6, 'Keyword should be at least 6 characters long!'] 
+    },
+    location: { type: String, required: true, 
+        minlength: [15, 'Location should be at least 15 characters long!'] 
+    },
+    date: { type: String, required: true, 
+        minLength: 10,
+        maxLength:10,
+        count: [10, 'Date should be exacly 10 characters long!']
+    },
     image: { type: String, required: true, validate: {
         validator: (value) => URL_PATTEERN.test(value),
         message: 'Image URL is not valid!'
     }},
-    price: { type: Number, required: true, min: [0, 'Price should be a positive number!'] },
-    description: { type: String, required: true, minlength: [10, 'Description should be at least 10 characters long!'] },
-
-    payMethod: { type: String, required: true, enum: {
-        values: ['crypto-wallet', 'credit-card', 'debit-card', 'paypal'],
-        message: 'Pay method is not supported!'}
+    description: { type: String, required: true, 
+        minlength: [8, 'Description should be at least 8 characters long!'] 
     },
+    rating: {
+        type: Number,
+        default: 0
+    },
+    author: { type: Types.ObjectId, ref: 'User' },
 
-    buyers: { type: [Types.ObjectId], ref: 'User', default: [] },
-    owner: { type: Types.ObjectId, ref: 'User' }
+    votes: { type: [Types.ObjectId], ref: 'User', default: [] },
 
 });
 

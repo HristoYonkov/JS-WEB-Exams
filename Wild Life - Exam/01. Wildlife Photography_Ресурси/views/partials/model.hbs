@@ -1,12 +1,12 @@
-<div class="coin">
-    <div class="coin-img">
-        <img src="{{image}}">
-    </div>
-    <div class="coin-info">
-        <h1>{{name}}</h1>
-        <p><span>Price: </span>${{price}}</p>
-        <p><span>Payment: </span>{{payMethod}}</p>
-    </div>
 
-    <a href="/model/details/{{_id}}" class="btn-details">Details</a>
+<div class="flip flip-vertical">
+    <div class="front">
+        <img src="{{image}}" alt="image_nature_1">
+        <h1 class="text-shadow">Keyword: {{keyword}}</h1>
+    </div>
+    <div class="back">
+        <h2>{{title}}</h2>
+        <p>{{description}}</p>
+        <a href="/model/details/{{_id}}" class="details">Details</a>
+    </div>
 </div>

@@ -3,44 +3,58 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page - Crypto Web</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Home Page</title>
+
+    <!-- Do not forget to change the path to the css file -->
+    <link href="/static/css/style.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
-    {{#if errors}}
-        <<div>
-            <div class="errorContainer">
-                {{#each errors}}
-                    <p>{{this}}</p>
-                {{/each}}
-            </div>
+
+
+    <div id="box">
+
+        <!-- In case of error, you should display div with class "error-container" -->
+        <!-- You can choose to display the first error or all of them (error message/s in your opinion) -->
+        {{#if errors}}
+        <div class="error-container">
+            {{#each errors}}
+            <p>{{this}}</p>
+            {{/each}}
         </div>
-    {{/if}}
-    <header class="header">
+        {{/if}}
+
         <nav>
-            <img src="/static/images/logo.png" class="logo">
-            <ul>
+            <!-- Do not forget to change the path to the image -->
+            <img src="/static/img/logo.png" alt="logo">
+
+            <ul class="menu">
                 <li><a href="/">Home</a></li>
-                <li><a href="/model/catalog">All Crypto</a></li>
+                <li><a href="/model/catalog">All Posts</a></li>
+                <!-- Logged users -->
                 {{#if username}}
-                <li><a href="/bonus/search">Search</a></li>
-                <li><a href="/model/create">Create Offer</a></li>
+                <li><a href="/model/create">Create Post</a></li>
+                <li><a href="/model/posts">Posts of {{username}}</a></li>
                 <li><a href="/auth/logout">Logout</a></li>
                 {{else}}
-                <li><a href="/auth/login">Login</a></li>
+                <!-- Guest users -->
                 <li><a href="/auth/register">Register</a></li>
+                <li><a href="/auth/login">Login</a></li>
                 {{/if}}
             </ul>
-        </nav>
-    </header>
 
-    {{{body}}}
-    <footer>
-        <p>Back-End 2022</p>
-    </footer>
+        </nav>
+
+        <main>
+            
+            {{{body}}}
+
+        </main>
+
+        <footer>
+            © Js Back-End Exam 2021
+        </footer>
+    </div>
 
 </body>
 

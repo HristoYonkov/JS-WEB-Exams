@@ -2,56 +2,75 @@
 const Model = require('../models/Model');
 
 function getAll() {
-    return  Model.find();
+    return Model.find();
+}
+
+function getByPosts(modelId) {
+    return Model.find({ votes })
 }
 
 function getOne(id) {
     return Model.findById(id);
 }
 
-function findConnection(userId) {
-    return  Model.find({wishingList: userId});
+async function findConnection(userId) {
+    return await Model.find({ author: userId });
 }
 
 async function buy(id, userId) {
-    return await Model.findByIdAndUpdate(id,{buyers: userId});
+    return await Model.findByIdAndUpdate(id, { buyers: userId });
 }
 
-async function create(model, userId) { 
+async function create(model, userId) {
     return await Model.create({
-        name: model.name,
+        title: model.title,
+        keyword: model.keyword,
+        location: model.location,
+        date: model.date,
         image: model.image,
-        price: model.price,
         description: model.description,
-        payMethod: model.payMethod,
-        buyers: model.buyers,
-        owner: userId
+        author: userId,
+        votes: model.votes,
     });
 }
 
 async function edit(id, model) {
     const editted = await Model.findById(id)
-    editted.name = model.name,
-    editted.image = model.image,
-    editted.price = model.price,
-    editted.description = model.description,
-    editted.payMethod = model.payMethod,
-    editted.buyers = model.buyers,
-        
-    await editted.save();
+    editted.title = model.title,
+        editted.keyword = model.keyword,
+        editted.location = model.location,
+        editted.date = model.date,
+        editted.image = model.image,
+        editted.description = model.description,
+
+        await editted.save();
 }
 
 async function deleteById(id) {
     try {
         return await Model.findByIdAndDelete(id);
-        
+
     } catch (error) {
         return error;
     }
 }
 // TODO: Check if 2 fields for search!
 async function getBySearch(modelName, payMethod) {
-    return await Model.find({ name: { $regex: modelName, $options: 'i' }, payMethod: { $regex: payMethod, $options: 'i' } }).lean(); 
+    return await Model.find({ name: { $regex: modelName, $options: 'i' }, payMethod: { $regex: payMethod, $options: 'i' } }).lean();
+}
+
+async function voteUp(modelId, userId) {
+    let changed = await Model.findById(modelId);
+    changed.rating += 1;
+    changed.votes.push(userId);
+    changed.save();
+}
+
+async function voteDown(modelId, userId) {
+    let changed = await Model.findById(modelId);
+    changed.rating -= 1;
+    changed.votes.push(userId);
+    changed.save();
 }
 
 
@@ -64,5 +83,8 @@ module.exports = {
     deleteById,
     findConnection,
     buy,
-    getBySearch
+    getBySearch,
+    voteDown,
+    voteUp,
+    getByPosts,
 }

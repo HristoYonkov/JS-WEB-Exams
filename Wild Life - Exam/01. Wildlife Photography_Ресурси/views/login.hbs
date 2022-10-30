@@ -1,22 +1,27 @@
-<main>
-    <!-- In case of error, you should display div with class "errorContainer" -->
-    <!-- You can choose to display the first error or all of them (error message/s in your opinion) -->
+<section id="login-page">
 
-    <!-- <div>
-            <div class="errorContainer">
-                <p>Error</p>
-            </div>
-        </div> -->
+    <div class="loginSection">
+        <div class="info">
+            <h2>Welcome, again!</h2>
+            <p>View new posts.</p>
+        </div>
+        <form method="POST" class="loginForm">
+            <h2>Login</h2>
+            <ul class="noBullet">
+                <li>
+                    <label for="email">Email:</label>
+                    <input type="text" class="inputFields" id="email" name="email" placeholder="alex@gmail.com" />
+                </li>
+                <li>
+                    <label for="password">Password:</label>
+                    <input type="password" class="inputFields" id="password" name="password" placeholder="*******" />
+                </li>
 
-    <div class="login-box">
-        <h1>Login</h1>
-        <form method="post">
-            <label>Email</label>
-            <input type="text" name="email" placeholder="Email.." value="{{body.email}}">
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Password..">
-            <input type="submit" value="Submit">
+                <li id="center-btn">
+                    <button id="login-btn">Login</button>
+                </li>
+            </ul>
         </form>
-        <p>Not have an account? <a href="/auth/register">Register here</a></p>
     </div>
-</main>
+
+</section>

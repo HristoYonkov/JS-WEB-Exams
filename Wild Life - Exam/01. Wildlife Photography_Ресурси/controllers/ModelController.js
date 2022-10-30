@@ -1,6 +1,7 @@
 const ModelController = require('express').Router();
 const { hasUser, isGuest } = require('../middlewares/guard');
 const ModelService = require('../services/ModelService');
+const userService = require('../services/userServise');
 const { parseError } = require('../util/parser');
 
 
@@ -35,22 +36,26 @@ ModelController.post('/create', hasUser(), async (req, res) => {
 
 ModelController.get('/details/:id', async (req, res) => {
     const model = await ModelService.getOne(req.params.id).lean();
+    const author = await userService.getAuthor(req.user._id).lean();
+    const authorName = `${author.firstname} ${author.lastname}`;
+    //const votedPeople = await ModelService.getByPosts(req.params.id);
+    
+    model.isAuthor = false;
+    model.isVoted = false;
 
-    model.isOwner = false;
-    model.isBuyed = false;
-    console.log(model);
-    if (req.user && model.owner == req.user._id) {
-        model.isOwner = true;
-    } else if (req.user && model.buyers && model.buyers.map(b => b.toString()).includes(req.user._id.toString())) {
-        model.isBuyed = true;
+    if (req.user && model.author.toString() == req.user._id) {
+        model.isAuthor = true;
+
+    } else if (req.user && model.votes && model.votes.map(b => b.toString()).includes(req.user._id.toString())) {
+        model.isVoted = true;
     }
 
-    res.render('details', { model, user: req.user });
+    res.render('details', { model, user: req.user, authorName });
 });
 
 ModelController.get('/edit/:id', hasUser(), async (req, res) => {
     const model = await ModelService.getOne(req.params.id).lean();
-    if (model.owner != req.user._id) {
+    if (model.author != req.user._id) {
         return res.redirect('/auth/login');
     }
 
@@ -59,7 +64,7 @@ ModelController.get('/edit/:id', hasUser(), async (req, res) => {
 
 ModelController.post('/edit/:id', hasUser(), async (req, res) => {
     const model = await ModelService.getOne(req.params.id).lean();
-    if (model.owner != req.user._id) {
+    if (model.author != req.user._id) {
         return res.redirect('/auth/login');
     }
 
@@ -80,16 +85,26 @@ ModelController.post('/edit/:id', hasUser(), async (req, res) => {
 });
 
 ModelController.get('/delete/:id', hasUser(), async (req, res) => {
-    let model = await ModelService.deleteById(req.params.id);
-    if (model.owner != req.user._id) {
+    let model = await ModelService.getOne(req.params.id);
+    if (model.author != req.user._id) {
         return res.redirect('/auth/login');
     }
-    
+    ModelService.deleteById(req.params.id)
     res.redirect('/model/catalog');
 });
 
-ModelController.get('/buy/:id', hasUser(), async (req, res) => {
-    const model = await ModelService.buy(req.params.id, req.user._id);
+ModelController.get('/posts', hasUser(), async (req, res) => {
+    const models = await ModelService.findConnection(req.user._id);
+    console.log(models);
+    res.render(`my-posts`);
+});
+
+ModelController.get('/voteUp/:id', hasUser(), async (req, res) => {
+    const model = await ModelService.voteUp(req.params.id, req.user._id);
+    res.redirect(`/model/details/${req.params.id}`);
+});
+ModelController.get('/voteDown/:id', hasUser(), async (req, res) => {
+    const model = await ModelService.voteDown(req.params.id, req.user._id);
     res.redirect(`/model/details/${req.params.id}`);
 });
 

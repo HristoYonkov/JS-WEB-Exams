@@ -1,16 +1,31 @@
-<main>
-    <section class="crypto-market">
-        <h1><span>Crypto</span> Trade</h1>
+<section id="catalog">
+    <h1>All posts</h1>
+    <div class="band">
+
+        <!-- If there are posts for wildlife in the database display each of them -->
+
         {{#if models}}
-        <div class="offer-list">
             {{#each models}}
                 {{> model}}
             {{/each}}
-        </div>
         {{else}}
-        <div class="no-offer">
-            <p>There are no crypto offers found!</p>
-        </div>
+            <div class="no-posts">
+                <div class="no-posts-img">
+                    <! /-- Do not forget to change the path to the image, and remove this comment -- />
+                    <img src="/static/img/animal.jpg" alt="image_nature_3">
+                </div>
+                <p class="no-offer">There are no posts yet...</p>
+            </div>
         {{/if}}
-    </section>
-</main>
+
+
+        <!-- If there are still no posts for wildlife in the database display: -->
+        <!-- <div class="no-posts">
+                        <div class="no-posts-img">
+                            <!/-- Do not forget to change the path to the image, and remove this comment  --/>
+                            <img src="./static/img/animal.jpg" alt="image_nature_3">
+                        </div>
+                        <p class="no-offer">There are no posts yet...</p>
+                    </div>-->
+    </div>
+</section>

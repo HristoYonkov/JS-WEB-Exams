@@ -1,5 +1,6 @@
 const { register, login } = require('../services/userServise');
 const { parseError } = require('../util/parser');
+const {isEmail} = require('validator'); 
 
 const authController = require('express').Router();
 
@@ -9,7 +10,11 @@ authController.get('/register', (req, res) => {
 });
 
 authController.post('/register', async (req, res) => {
+    console.log(req.body);
     try {
+        if (!isEmail(req.body.email)) {
+            throw new Error('Email must be Valid!');
+        }
         if (Object.values(req.body).some(x => !x)) {
             throw new Error('All fields are required!')
         }
@@ -19,7 +24,7 @@ authController.post('/register', async (req, res) => {
         if (req.body.password.length < 4) {
             throw new Error('Password must be atleast 4 characters long!');
         }
-        const token = await register(req.body.username, req.body.email, req.body.password);
+        const token = await register(req.body.firstname, req.body.lastname, req.body.email, req.body.password, );
         
         res.cookie('token', token);
         res.redirect('/');
